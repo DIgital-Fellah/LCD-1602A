@@ -1,0 +1,42 @@
+#include <Wire.h>
+#include <LiquidCrystal_PCF8574.h>
+
+// Function to test if an I2C address is responsive
+bool testI2CAddress(uint8_t address) {
+  Wire.beginTransmission(address);
+  return (Wire.endTransmission() == 0);
+}
+
+LiquidCrystal_PCF8574 lcd(0x27); // Start with default address
+
+void setup() {
+  Wire.begin(); // Initialize I2C communication
+
+  // Check if the LCD is at address 0x27
+  if (testI2CAddress(0x27)) {
+    lcd = LiquidCrystal_PCF8574(0x27);
+  } 
+  // Check if the LCD is at address 0x3F
+  else if (testI2CAddress(0x3F)) {
+    lcd = LiquidCrystal_PCF8574(0x3F);
+  } 
+  // If neither address responds, halt
+  else {
+    while (true) {
+      // Optionally, you could blink an LED to indicate error
+    }
+  }
+
+  lcd.begin(16, 2); // Initialize the LCD with the correct address
+  lcd.setBacklight(1); // Turn on the backlight
+
+  // Print a message to the LCD
+  lcd.setCursor(0, 0);
+  lcd.print("Hey LCD1602 here");
+  lcd.setCursor(0, 1);
+  lcd.print("I'm ready to go!");
+}
+
+void loop() {
+  // No need for any code in the loop
+}
